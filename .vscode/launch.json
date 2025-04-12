@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-OnboardingSimulatorApplication<onboarding-simulator>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.onboarding.simulator.OnboardingSimulatorApplication",
+            "projectName": "onboarding-simulator",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
