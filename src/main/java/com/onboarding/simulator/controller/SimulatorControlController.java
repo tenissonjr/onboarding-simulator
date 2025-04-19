@@ -1,22 +1,23 @@
 package com.onboarding.simulator.controller;
 
-import com.onboarding.simulator.model.SimulatedOnboardingData;
-import com.onboarding.simulator.service.SimulatorService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
+import com.onboarding.simulator.model.SimulatedOnboardingData;
+import com.onboarding.simulator.service.SimulatorService;
 
 @RestController
 @RequestMapping("/api/simulator/control")
-@RequiredArgsConstructor
-@Slf4j
 public class SimulatorControlController {
     private final SimulatorService simulatorService;
+
+    public SimulatorControlController(SimulatorService simulatorService) {
+        this.simulatorService = simulatorService;
+    }
     
     @PostMapping("/start")
     public ResponseEntity<String> startSimulation() {

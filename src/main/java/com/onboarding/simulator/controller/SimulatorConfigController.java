@@ -1,21 +1,30 @@
 package com.onboarding.simulator.controller;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.onboarding.simulator.dto.ErrorConfigDto;
 import com.onboarding.simulator.dto.GenerationRateConfigDto;
 import com.onboarding.simulator.dto.NotificationConfigDto;
 import com.onboarding.simulator.model.SimulatorConfig;
 import com.onboarding.simulator.service.SimulatorService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/simulator/config")
-@RequiredArgsConstructor
-@Slf4j
+
 public class SimulatorConfigController {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SimulatorConfigController.class);
+
     private final SimulatorService simulatorService;
+
+    public SimulatorConfigController(SimulatorService simulatorService) {
+        this.simulatorService = simulatorService;
+    }
     
     @GetMapping
     public ResponseEntity<SimulatorConfig> getConfig() {

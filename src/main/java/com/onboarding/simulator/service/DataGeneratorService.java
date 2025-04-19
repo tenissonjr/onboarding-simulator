@@ -1,26 +1,36 @@
 package com.onboarding.simulator.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
+
+import org.springframework.stereotype.Service;
+
 import com.github.javafaker.Faker;
 import com.onboarding.simulator.model.SimulatedOnboardingData;
 import com.onboarding.simulator.repository.SimulatedOnboardingDataRepository;
 import com.onboarding.simulator.repository.SimulatorConfigRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
+
 public class DataGeneratorService {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DataGeneratorService.class);
+
     private final SimulatedOnboardingDataRepository onboardingDataRepository;
     private final SimulatorConfigRepository configRepository;
     private final Faker faker = new Faker(new Locale("pt-BR"));
-    
+
+    public DataGeneratorService(SimulatedOnboardingDataRepository onboardingDataRepository,
+                               SimulatorConfigRepository configRepository) {
+        this.onboardingDataRepository = onboardingDataRepository;
+        this.configRepository = configRepository;
+    }
+
     public SimulatedOnboardingData generateOnboardingData() {
         String hash = generateUniqueHash();
         var config = configRepository.findById(1L).orElseThrow();

@@ -1,6 +1,18 @@
 package com.onboarding.simulator.service;
 
-import com.onboarding.simulator.dto.*;
+import java.time.LocalDateTime;
+import java.util.Random;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.onboarding.simulator.dto.ErrorConfigDto;
+import com.onboarding.simulator.dto.GenerationRateConfigDto;
+import com.onboarding.simulator.dto.NotificationConfigDto;
+import com.onboarding.simulator.dto.OnboardingDataResponseDto;
+import com.onboarding.simulator.dto.SimulatorStatisticsDto;
 import com.onboarding.simulator.model.GenerationPattern;
 import com.onboarding.simulator.model.NotificationStatus;
 import com.onboarding.simulator.model.SimulatedOnboardingData;
@@ -8,26 +20,32 @@ import com.onboarding.simulator.model.SimulatorConfig;
 import com.onboarding.simulator.repository.NotificationRecordRepository;
 import com.onboarding.simulator.repository.SimulatedOnboardingDataRepository;
 import com.onboarding.simulator.repository.SimulatorConfigRepository;
-import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.Random;
+import jakarta.annotation.PostConstruct;
 
 @Service
-@Slf4j
-@RequiredArgsConstructor
 public class SimulatorService {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SimulatorService.class);
+
     private final SimulatorConfigRepository configRepository;
     private final SimulatedOnboardingDataRepository onboardingDataRepository;
     private final NotificationRecordRepository notificationRepository;
     private final DataGeneratorService dataGeneratorService;
     private final NotificationService notificationService;
+
+
+    public SimulatorService(SimulatorConfigRepository configRepository,
+                            SimulatedOnboardingDataRepository onboardingDataRepository,
+                            NotificationRecordRepository notificationRepository,
+                            DataGeneratorService dataGeneratorService,
+                            NotificationService notificationService) {
+        this.configRepository = configRepository;
+        this.onboardingDataRepository = onboardingDataRepository;
+        this.notificationRepository = notificationRepository;
+        this.dataGeneratorService = dataGeneratorService;
+        this.notificationService = notificationService;
+    }
     
     private long totalGeneratedCount = 0;
     private final Random random = new Random();
@@ -236,6 +254,7 @@ public class SimulatorService {
         );
         
         return new OnboardingDataResponseDto(
+                data.getHash(),
                 data.getCpf(),
                 data.getNome(),
                 data.getNomeSocial(),

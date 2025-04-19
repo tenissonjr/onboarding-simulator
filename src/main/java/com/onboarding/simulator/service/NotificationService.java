@@ -1,12 +1,9 @@
 package com.onboarding.simulator.service;
 
-import com.onboarding.simulator.model.NotificationRecord;
-import com.onboarding.simulator.model.NotificationStatus;
-import com.onboarding.simulator.model.SimulatedOnboardingData;
-import com.onboarding.simulator.repository.NotificationRecordRepository;
-import com.onboarding.simulator.repository.SimulatorConfigRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.Random;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -14,19 +11,29 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.Random;
+import com.onboarding.simulator.model.NotificationRecord;
+import com.onboarding.simulator.model.NotificationStatus;
+import com.onboarding.simulator.model.SimulatedOnboardingData;
+import com.onboarding.simulator.repository.NotificationRecordRepository;
+import com.onboarding.simulator.repository.SimulatorConfigRepository;
+
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
 public class NotificationService {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(NotificationService.class);
+
     private final NotificationRecordRepository notificationRepository;
     private final SimulatorConfigRepository configRepository;
     private final RestTemplate restTemplate = new RestTemplate();
     private final Random random = new Random();
     
+    public NotificationService(NotificationRecordRepository notificationRepository,
+                              SimulatorConfigRepository configRepository) {
+        this.notificationRepository = notificationRepository;
+        this.configRepository = configRepository;
+    }
+
     public NotificationRecord sendNotification(SimulatedOnboardingData data) {
         var config = configRepository.findById(1L).orElseThrow();
         String endpoint = config.getNotificationEndpoint();
