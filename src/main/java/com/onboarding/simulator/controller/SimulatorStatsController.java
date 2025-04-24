@@ -22,6 +22,7 @@ public class SimulatorStatsController {
     
     @GetMapping
     public ResponseEntity<SimulatorStatisticsDto> getSimulationStatistics() {
+        log.info("Fetching simulation statistics");
         return ResponseEntity.ok(simulatorService.getSimulationStatistics());
     }
 }

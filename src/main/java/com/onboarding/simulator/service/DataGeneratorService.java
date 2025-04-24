@@ -23,7 +23,7 @@ public class DataGeneratorService {
 
     private final SimulatedOnboardingDataRepository onboardingDataRepository;
     private final SimulatorConfigRepository configRepository;
-    private final Faker faker = new Faker(new Locale("pt-BR"));
+    private final Faker faker = new Faker(Locale.forLanguageTag("pt-BR"));
 
     public DataGeneratorService(SimulatedOnboardingDataRepository onboardingDataRepository,
                                SimulatorConfigRepository configRepository) {
