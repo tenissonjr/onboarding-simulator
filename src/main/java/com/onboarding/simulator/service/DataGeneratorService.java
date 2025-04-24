@@ -1,7 +1,8 @@
 package com.onboarding.simulator.service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -11,66 +12,142 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.springframework.stereotype.Service;
 
 import com.github.javafaker.Faker;
-import com.onboarding.simulator.model.SimulatedOnboardingData;
-import com.onboarding.simulator.repository.SimulatedOnboardingDataRepository;
-import com.onboarding.simulator.repository.SimulatorConfigRepository;
+import com.onboarding.simulator.model.CaptureItemReport;
+import com.onboarding.simulator.model.CapturesReport;
+import com.onboarding.simulator.model.LinessesTwoDimensionResult;
+import com.onboarding.simulator.model.OcrDocumentReport;
+import com.onboarding.simulator.model.ValidOnboardingData;
+import com.onboarding.simulator.repository.ValidOnboardingDataRepository;
 
 @Service
 
 public class DataGeneratorService {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DataGeneratorService.class);
+    private final ValidOnboardingDataRepository validOnboardingDataRepository;
 
-    private final SimulatedOnboardingDataRepository onboardingDataRepository;
-    private final SimulatorConfigRepository configRepository;
+
     private final Faker faker = new Faker(Locale.forLanguageTag("pt-BR"));
 
-    public DataGeneratorService(SimulatedOnboardingDataRepository onboardingDataRepository,
-                               SimulatorConfigRepository configRepository) {
-        this.onboardingDataRepository = onboardingDataRepository;
-        this.configRepository = configRepository;
+    public DataGeneratorService(ValidOnboardingDataRepository validOnboardingDataRepository) {
+        this.validOnboardingDataRepository = validOnboardingDataRepository;
     }
 
-    public SimulatedOnboardingData generateOnboardingData() {
+    public ValidOnboardingData generateValidOnboardingData(){
         String hash = generateUniqueHash();
-        var config = configRepository.findById(1L).orElseThrow();
-        int ttlMinutes = config.getDataTtlMinutes();
-        
-        SimulatedOnboardingData data = new SimulatedOnboardingData();
+
+        ValidOnboardingData data = new ValidOnboardingData();
         data.setHash(hash);
-        data.setCpf(generateCpf());
-        data.setNome(faker.name().fullName());
-        data.setNomeSocial(Math.random() > 0.8 ? faker.name().fullName() : null);
-        
-        // Generate birth date between 18 and 90 years ago
-        LocalDate birthDate = generateRandomDate(LocalDate.now().minusYears(90), LocalDate.now().minusYears(18));
-        data.setDataNascimento(birthDate);
-        
-        data.setNomeMae(faker.name().fullName());
-        data.setNumeroDocumento(generateDocumentNumber());
-        data.setPaisOrigem("Brasil");
-        data.setOrgaoEmissor(generateOrgaoEmissor());
-        data.setUf(generateUf());
-        
-        // Document should be issued between 18th birthday and now
-        LocalDate minIssueDate = birthDate.plusYears(18);
-        LocalDate issueDate = generateRandomDate(minIssueDate, LocalDate.now());
-        data.setDataExpedicao(issueDate);
-        
-        // Document expires 10 years after issuance
-        data.setDataVencimento(issueDate.plusYears(10));
-        
-        // Generate mock base64 images
-        data.setFotoUsuario(generateMockBase64Image("selfie"));
-        data.setImagemDocumentoFrente(generateMockBase64Image("docFront"));
-        data.setImagemDocumentoVerso(generateMockBase64Image("docBack"));
-        
-        data.setCreatedAt(LocalDateTime.now());
-        data.setExpiresAt(LocalDateTime.now().plusMinutes(ttlMinutes));
-        
-        log.debug("Generated onboarding data with hash: {}", hash);
-        return onboardingDataRepository.save(data);
+        data.setCompanyId("199e960e-cdac-462a-b06a-fce9ae09890e");
+        data.setScheduleConfigurationId("657e4a6f-0425-4f8f-a44e-57917cccf2f7");
+        data.setName("Cadastro");
+        data.setIdentifier(hash);
+        data.setEmployee(null);
+        data.setEmailClient("");
+        data.setPhoneNumber(null);
+        data.setScheduleType("Auto ID");
+        data.setScheduleStatus("Completed");
+        data.setScheduleTime("2025-04-23T15:47:27.41");
+        data.setDateStarted("2025-04-23T15:47:27.317");
+        data.setDateCompleted("2025-04-23T15:49:35.83");
+        data.setDateDuration("00:02:08");
+        data.setCapturePlatform("Lite");
+        data.setExternalInitialize(false);
+        data.setChat(new ArrayList<>());
+
+        // Create and populate capturesReport
+        List<CapturesReport> capturesReportList = new ArrayList<>();
+
+        // First CapturesReport
+        CapturesReport report1 = new CapturesReport();
+        report1.setOid("625be2d0-e465-4200-8e36-097329647357");
+        report1.setName("Prova de vida");
+
+        CaptureItemReport itemReport1 = new CaptureItemReport();
+        itemReport1.setOid("a478f091-e58b-4be5-83f8-ca9d803b0a79");
+        itemReport1.setTime("04/23/2025 15:48:36");
+        itemReport1.setType("Png");
+        itemReport1.setUrl("https://certfyremote.blob.core.windows.net/199e960e-cdac-462a-b06a-fce9ae09890e/Face-autoid-3830786e-4062-42b7-adf4-112c8a09e3ff-638810201217711971.jpeg");
+        itemReport1.setUrl_2(null);
+
+
+        LinessesTwoDimensionResult livenessResult = new LinessesTwoDimensionResult();
+        livenessResult.setSuccess(true);
+        livenessResult.setResult("");
+        livenessResult.setSpoof(false);
+        livenessResult.setScore(100);
+        livenessResult.setIntegrationType("LivenessPro");
+        itemReport1.setLinessesTwoDimensionResult(livenessResult);
+
+        itemReport1.setOcrDocumentReport(null);
+        itemReport1.setBase64(null);
+        itemReport1.setBase64_2(null);
+
+        report1.setCaptureItemReport(List.of(itemReport1));
+        capturesReportList.add(report1);
+
+        // Second CapturesReport
+        CapturesReport report2 = new CapturesReport();
+        report2.setOid("0dcbf49e-3e88-43a7-a759-6abb72bab841");
+        report2.setName(" Documento de Identificação");
+
+        CaptureItemReport itemReport2 = new CaptureItemReport();
+        itemReport2.setOid("9257c6c7-979b-49dd-a091-ee7ed0080fa4");
+        itemReport2.setTime("04/23/2025 15:48:08");
+        itemReport2.setType("Png");
+        itemReport2.setUrl("https://certfyremote.blob.core.windows.net/199e960e-cdac-462a-b06a-fce9ae09890e/autoid-3830786e-4062-42b7-adf4-112c8a09e3ff-154805.png");
+        itemReport2.setUrl_2("");
+        itemReport2.setLinessesTwoDimensionResult(null);
+
+        OcrDocumentReport ocrReport = new OcrDocumentReport();
+        ocrReport.setFaceUrl(null);
+        ocrReport.setDocType("CNH");
+        ocrReport.setDocumentName(faker.name().fullName());
+        ocrReport.setRg(generateDocumentNumber());
+        ocrReport.setCpf(generateCpf());
+        ocrReport.setFiliacao1(faker.name().fullName());
+        ocrReport.setFiliacao2(faker.name().fullName());
+        ocrReport.setOrgao_emissor_do_RG("SSP");
+        ocrReport.setEstado_emissor_do_RG(null);
+        ocrReport.setData_de_validade("27/04/2027");
+
+
+
+        Date dataNascimento= faker.date().birthday() ;
+
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+
+        ocrReport.setData_de_nascimento(sdf.format(dataNascimento));
+        ocrReport.setData_de_expedicao("20/06/2022");
+        ocrReport.setData_primeira_Habilitacao("05/03/1988");
+        ocrReport.setLocal_de_emissao_da_CNH("BRASILIA-DISTRITO FEDERAL, DF");
+        ocrReport.setNumero_da_CNH("00156426578");
+        ocrReport.setCategoria_da_CNH(null);
+        ocrReport.setNumero_do_Renach_na_CNH("DF769658407");
+        ocrReport.setCampo_de_Observacao_na_CNH(null);
+        ocrReport.setInformativo_da_observação_da_CNH("Sim");
+        ocrReport.setOrgao_emissor_da_CNH("SECRETARIA NACIONAL DE TRANSITO");
+        ocrReport.setPais(null);
+
+        // (remaining fields are omitted for brevity)
+        itemReport2.setOcrDocumentReport(ocrReport);
+        itemReport2.setBase64(null);
+        itemReport2.setBase64_2(null);
+
+        report2.setCaptureItemReport(List.of(itemReport2));
+        capturesReportList.add(report2);
+
+        data.setCapturesReport(capturesReportList);
+        data.setCertificationFacematchRecord(null);
+        data.setRelationshipScheduleConfigurationId(null);
+        data.setClientGeolocationLatitude("");
+        data.setClientGeolocationLongitude("");
+        data.setCrSummaryResponse(null);
+
+        return validOnboardingDataRepository.save(data);
+
     }
+
     
     private String generateUniqueHash() {
         return UUID.randomUUID().toString().replace("-", "");
@@ -133,19 +210,6 @@ public class DataGeneratorService {
         return LocalDate.ofEpochDay(randomDay);
     }
     
-    private String generateMockBase64Image(String type) {
-        // Generate mock base64 image in format: data:image/png;base64,...
-        // In a real implementation, you'd generate actual document/selfie images
-        // Here we'll just return a placeholder
-        return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
-    }
+
     
-    public void cleanupExpiredData() {
-        LocalDateTime now = LocalDateTime.now();
-        List<SimulatedOnboardingData> expiredData = onboardingDataRepository.findByExpiresAtBefore(now);
-        if (!expiredData.isEmpty()) {
-            log.debug("Cleaning up {} expired onboarding data records", expiredData.size());
-            onboardingDataRepository.deleteAll(expiredData);
-        }
-    }
 }

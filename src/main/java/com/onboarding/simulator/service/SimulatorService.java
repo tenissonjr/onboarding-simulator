@@ -1,6 +1,5 @@
 package com.onboarding.simulator.service;
 
-import java.time.LocalDateTime;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -11,15 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.onboarding.simulator.dto.ErrorConfigDto;
 import com.onboarding.simulator.dto.GenerationRateConfigDto;
 import com.onboarding.simulator.dto.NotificationConfigDto;
-import com.onboarding.simulator.dto.OnboardingDataResponseDto;
 import com.onboarding.simulator.dto.SimulatorStatisticsDto;
 import com.onboarding.simulator.model.GenerationPattern;
 import com.onboarding.simulator.model.NotificationStatus;
-import com.onboarding.simulator.model.SimulatedOnboardingData;
 import com.onboarding.simulator.model.SimulatorConfig;
+import com.onboarding.simulator.model.ValidOnboardingData;
 import com.onboarding.simulator.repository.NotificationRecordRepository;
-import com.onboarding.simulator.repository.SimulatedOnboardingDataRepository;
 import com.onboarding.simulator.repository.SimulatorConfigRepository;
+import com.onboarding.simulator.repository.ValidOnboardingDataRepository;
 
 import jakarta.annotation.PostConstruct;
 
@@ -28,20 +26,20 @@ public class SimulatorService {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SimulatorService.class);
 
+    private final ValidOnboardingDataRepository validOnboardingDataRepository;
     private final SimulatorConfigRepository configRepository;
-    private final SimulatedOnboardingDataRepository onboardingDataRepository;
     private final NotificationRecordRepository notificationRepository;
     private final DataGeneratorService dataGeneratorService;
     private final NotificationService notificationService;
 
 
-    public SimulatorService(SimulatorConfigRepository configRepository,
-                            SimulatedOnboardingDataRepository onboardingDataRepository,
+    public SimulatorService(ValidOnboardingDataRepository validOnboardingDataRepository,
+                            SimulatorConfigRepository configRepository,
                             NotificationRecordRepository notificationRepository,
                             DataGeneratorService dataGeneratorService,
                             NotificationService notificationService) {
+        this.validOnboardingDataRepository = validOnboardingDataRepository;
         this.configRepository = configRepository;
-        this.onboardingDataRepository = onboardingDataRepository;
         this.notificationRepository = notificationRepository;
         this.dataGeneratorService = dataGeneratorService;
         this.notificationService = notificationService;
@@ -65,9 +63,6 @@ public class SimulatorService {
     @Value("${simulator.default.response-delay-ms}")
     private int defaultResponseDelayMs;
     
-    @Value("${simulator.default.data-ttl-minutes}")
-    private int defaultDataTtlMinutes;
-    
     @Value("${simulator.default.notification-endpoint}")
     private String defaultNotificationEndpoint;
     
@@ -81,7 +76,6 @@ public class SimulatorService {
             config.setGenerateErrors(defaultGenerateErrors);
             config.setErrorRate(defaultErrorRate);
             config.setResponseDelayMs(defaultResponseDelayMs);
-            config.setDataTtlMinutes(defaultDataTtlMinutes);
             config.setNotificationEndpoint(defaultNotificationEndpoint);
             config.setSimulationRunning(false);
             configRepository.save(config);
@@ -110,7 +104,6 @@ public class SimulatorService {
     public SimulatorConfig updateNotificationConfig(NotificationConfigDto configDto) {
         SimulatorConfig config = configRepository.findById(1L).orElseThrow();
         config.setNotificationEndpoint(configDto.getNotificationEndpoint());
-        config.setDataTtlMinutes(configDto.getDataTtlMinutes());
         return configRepository.save(config);
     }
     
@@ -136,8 +129,8 @@ public class SimulatorService {
     }
     
     @Transactional
-    public SimulatedOnboardingData generateSingleCadastro() {
-        SimulatedOnboardingData data = dataGeneratorService.generateOnboardingData();
+    public ValidOnboardingData generateSingleCadastro() {
+        ValidOnboardingData data = dataGeneratorService.generateValidOnboardingData();
         totalGeneratedCount++;
         notificationService.sendNotification(data);
         return data;
@@ -224,11 +217,6 @@ public class SimulatorService {
         }).start();
     }
     
-    @Scheduled(fixedRate = 300000) // Every 5 minutes
-    @Transactional
-    public void cleanupExpiredData() {
-        dataGeneratorService.cleanupExpiredData();
-    }
     
     public SimulatorStatisticsDto getSimulationStatistics() {
         SimulatorConfig config = configRepository.findById(1L).orElseThrow();
@@ -237,33 +225,10 @@ public class SimulatorService {
                 totalGeneratedCount,
                 notificationRepository.countByStatus(NotificationStatus.SENT),
                 notificationRepository.countByStatus(NotificationStatus.FAILED),
-                onboardingDataRepository.countActiveCadastros(LocalDateTime.now()),
+                validOnboardingDataRepository.count(),
                 config.getCadastrosPerMinute(),
                 config.isSimulationRunning()
         );
     }
     
-    public OnboardingDataResponseDto mapToResponseDto(SimulatedOnboardingData data) {
-        OnboardingDataResponseDto.DocumentoDto documentoDto = new OnboardingDataResponseDto.DocumentoDto(
-                data.getNumeroDocumento(),
-                data.getPaisOrigem(),
-                data.getOrgaoEmissor(),
-                data.getUf(),
-                data.getDataExpedicao(),
-                data.getDataVencimento()
-        );
-        
-        return new OnboardingDataResponseDto(
-                data.getHash(),
-                data.getCpf(),
-                data.getNome(),
-                data.getNomeSocial(),
-                data.getDataNascimento(),
-                data.getNomeMae(),
-                documentoDto,
-                data.getFotoUsuario(),
-                data.getImagemDocumentoFrente(),
-                data.getImagemDocumentoVerso()
-        );
-    }
 }

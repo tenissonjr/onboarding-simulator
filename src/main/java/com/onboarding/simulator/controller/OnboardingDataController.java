@@ -10,12 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.onboarding.simulator.dto.OnboardingDataResponseDto;
-import com.onboarding.simulator.model.SimulatedOnboardingData;
 import com.onboarding.simulator.model.SimulatorConfig;
-import com.onboarding.simulator.repository.SimulatedOnboardingDataRepository;
+import com.onboarding.simulator.model.ValidOnboardingData;
 import com.onboarding.simulator.repository.SimulatorConfigRepository;
-import com.onboarding.simulator.service.SimulatorService;
+import com.onboarding.simulator.repository.ValidOnboardingDataRepository;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -25,20 +23,17 @@ public class OnboardingDataController {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(OnboardingDataController.class);
 
-    private final SimulatedOnboardingDataRepository onboardingDataRepository;
+    private final ValidOnboardingDataRepository validOnboardingDataRepository;
     private final SimulatorConfigRepository configRepository;
-    private final SimulatorService simulatorService;
 
-    public OnboardingDataController(SimulatedOnboardingDataRepository onboardingDataRepository,
-                                  SimulatorConfigRepository configRepository,
-                                  SimulatorService simulatorService) {
-        this.onboardingDataRepository = onboardingDataRepository;
+    public OnboardingDataController(ValidOnboardingDataRepository validOnboardingDataRepository,
+                                  SimulatorConfigRepository configRepository) {
+        this.validOnboardingDataRepository = validOnboardingDataRepository;
         this.configRepository = configRepository;
-        this.simulatorService = simulatorService;
     }    
     
     @GetMapping("/data/{hash}")
-    public ResponseEntity<OnboardingDataResponseDto> getOnboardingData(@PathVariable String hash, HttpServletResponse response) {
+    public ResponseEntity<ValidOnboardingData> getOnboardingData(@PathVariable String hash, HttpServletResponse response) {
         log.debug("Received request for onboarding data with hash: {}", hash);
         
         // Check if errors should be simulated
@@ -57,11 +52,10 @@ public class OnboardingDataController {
             }
         }
         
-        SimulatedOnboardingData data = onboardingDataRepository.findById(hash)
+        ValidOnboardingData data = validOnboardingDataRepository.findById(hash)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Data not found for hash: " + hash));
         
-        OnboardingDataResponseDto responseDto = simulatorService.mapToResponseDto(data);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(data);
     }
     
     @PostMapping("/notification")

@@ -5,7 +5,7 @@ public class SimulatorStatisticsDto {
     private long totalCadastrosGenerated;
     private long totalNotificationsSent;
     private long totalNotificationsFailed;
-    private long activeCadastros;
+    private long cadastros;
     private long generationRate; // current per minute
     private boolean simulationRunning;
     public SimulatorStatisticsDto(long totalGeneratedCount, long countByStatus, long countByStatus2,
@@ -13,7 +13,7 @@ public class SimulatorStatisticsDto {
         this.totalCadastrosGenerated = totalGeneratedCount;
         this.totalNotificationsSent = countByStatus;
         this.totalNotificationsFailed = countByStatus2;
-        this.activeCadastros = countActiveCadastros;
+        this.cadastros = countActiveCadastros;
         this.generationRate = cadastrosPerMinute;
         this.simulationRunning = simulationRunning2;
 
@@ -36,11 +36,11 @@ public class SimulatorStatisticsDto {
     public void setTotalNotificationsFailed(long totalNotificationsFailed) {
         this.totalNotificationsFailed = totalNotificationsFailed;
     }
-    public long getActiveCadastros() {
-        return activeCadastros;
+    public long getCadastros() {
+        return cadastros;
     }
-    public void setActiveCadastros(long activeCadastros) {
-        this.activeCadastros = activeCadastros;
+    public void setCadastros(long activeCadastros) {
+        this.cadastros = activeCadastros;
     }
     public long getGenerationRate() {
         return generationRate;

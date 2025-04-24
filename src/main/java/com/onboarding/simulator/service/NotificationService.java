@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.onboarding.simulator.model.NotificationRecord;
 import com.onboarding.simulator.model.NotificationStatus;
-import com.onboarding.simulator.model.SimulatedOnboardingData;
+import com.onboarding.simulator.model.ValidOnboardingData;
 import com.onboarding.simulator.repository.NotificationRecordRepository;
 import com.onboarding.simulator.repository.SimulatorConfigRepository;
 
@@ -34,12 +34,12 @@ public class NotificationService {
         this.configRepository = configRepository;
     }
 
-    public NotificationRecord sendNotification(SimulatedOnboardingData data) {
+    public NotificationRecord sendNotification(ValidOnboardingData data) {
         var config = configRepository.findById(1L).orElseThrow();
         String endpoint = config.getNotificationEndpoint();
         
         NotificationRecord record = new NotificationRecord();
-        record.setHash(data.getHash());
+        record.setHash(data.getIdentifier());
         record.setNotificationTime(LocalDateTime.now());
         record.setTargetEndpoint(endpoint);
         record.setStatus(NotificationStatus.PENDING);
@@ -48,7 +48,7 @@ public class NotificationService {
         if (config.isGenerateErrors() && random.nextDouble() < config.getErrorRate()) {
             record.setStatus(NotificationStatus.FAILED);
             record.setErrorMessage("Simulated error");
-            log.debug("Simulated notification failure for hash: {}", data.getHash());
+            log.debug("Simulated notification failure for hash: {}", data.getIdentifier());
             return notificationRepository.save(record);
         }
         
@@ -66,17 +66,17 @@ public class NotificationService {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             
-            Map<String, String> payload = Map.of("hash", data.getHash());
+            Map<String, String> payload = Map.of("hash", data.getIdentifier());
             HttpEntity<Map<String, String>> request = new HttpEntity<>(payload, headers);
             
             restTemplate.postForEntity(endpoint, request, String.class);
             
             record.setStatus(NotificationStatus.SENT);
-            log.debug("Sent notification for hash: {}", data.getHash());
+            log.debug("Sent notification for hash: {}", data.getIdentifier());
         } catch (RestClientException e) {
             record.setStatus(NotificationStatus.FAILED);
             record.setErrorMessage(e.getMessage());
-            log.error("Failed to send notification for hash: {}", data.getHash(), e);
+            log.error("Failed to send notification for hash: {}", data.getIdentifier(), e);
         }
         
         return notificationRepository.save(record);

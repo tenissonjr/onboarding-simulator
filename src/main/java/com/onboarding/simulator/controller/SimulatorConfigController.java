@@ -47,8 +47,6 @@ public class SimulatorConfigController {
     
     @PutMapping("/notification")
     public ResponseEntity<SimulatorConfig> updateNotificationConfig(@RequestBody NotificationConfigDto configDto) {
-        log.info("Updating notification configuration: endpoint={}, dataTtlMinutes={}",
-                configDto.getNotificationEndpoint(), configDto.getDataTtlMinutes());
         return ResponseEntity.ok(simulatorService.updateNotificationConfig(configDto));
     }
 }

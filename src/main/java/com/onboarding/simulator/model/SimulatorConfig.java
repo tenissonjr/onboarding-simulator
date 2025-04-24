@@ -19,7 +19,6 @@ public class SimulatorConfig {
     private double errorRate; // 0.0 to 1.0
     private int responseDelayMs;
     private String notificationEndpoint;
-    private int dataTtlMinutes; // Time to live for generated data
     private boolean simulationRunning;
     public Long getId() {
         return id;
@@ -62,12 +61,6 @@ public class SimulatorConfig {
     }
     public void setNotificationEndpoint(String notificationEndpoint) {
         this.notificationEndpoint = notificationEndpoint;
-    }
-    public int getDataTtlMinutes() {
-        return dataTtlMinutes;
-    }
-    public void setDataTtlMinutes(int dataTtlMinutes) {
-        this.dataTtlMinutes = dataTtlMinutes;
     }
     public boolean isSimulationRunning() {
         return simulationRunning;
