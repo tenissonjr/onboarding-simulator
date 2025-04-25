@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.onboarding.simulator.model.NotificationRecord;
 import com.onboarding.simulator.model.NotificationStatus;
-import com.onboarding.simulator.model.ValidOnboardingData;
+import com.onboarding.simulator.model.valid.ValidOnboardingData;
 import com.onboarding.simulator.repository.NotificationRecordRepository;
 import com.onboarding.simulator.repository.SimulatorConfigRepository;
 

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.onboarding.simulator.model.ValidOnboardingData;
+import com.onboarding.simulator.model.valid.ValidOnboardingData;
 import com.onboarding.simulator.service.SimulatorService;
 
 @RestController

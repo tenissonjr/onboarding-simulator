@@ -1,10 +1,10 @@
-package com.onboarding.simulator.model;
+package com.onboarding.simulator.model.valid;
 
 import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-public class CapturesReport {
+public class ValidCapturesReport {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,7 +14,7 @@ public class CapturesReport {
     private String name;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CaptureItemReport> captureItemReport;
+    private List<ValidCaptureItemReport> captureItemReport;
 
     public String getOid() {
         return oid;
@@ -28,10 +28,10 @@ public class CapturesReport {
     public void setName(String name) {
         this.name = name;
     }
-    public List<CaptureItemReport> getCaptureItemReport() {
+    public List<ValidCaptureItemReport> getCaptureItemReport() {
         return captureItemReport;
     }
-    public void setCaptureItemReport(List<CaptureItemReport> captureItemReport) {
+    public void setCaptureItemReport(List<ValidCaptureItemReport> captureItemReport) {
         this.captureItemReport = captureItemReport;
     }
 

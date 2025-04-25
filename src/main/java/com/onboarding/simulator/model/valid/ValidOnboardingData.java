@@ -1,4 +1,4 @@
-package com.onboarding.simulator.model;
+package com.onboarding.simulator.model.valid;
 
 import jakarta.persistence.*;
 import java.util.List;
@@ -29,7 +29,7 @@ public class ValidOnboardingData {
     private List<String> chat;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CapturesReport> capturesReport;
+    private List<ValidCapturesReport> capturesReport;
 
     private String certificationFacematchRecord;
     private String relationshipScheduleConfigurationId;
@@ -133,10 +133,10 @@ public class ValidOnboardingData {
     public void setChat(List<String> chat) {
         this.chat = chat;
     }
-    public List<CapturesReport> getCapturesReport() {
+    public List<ValidCapturesReport> getCapturesReport() {
         return capturesReport;
     }
-    public void setCapturesReport(List<CapturesReport> capturesReport) {
+    public void setCapturesReport(List<ValidCapturesReport> capturesReport) {
         this.capturesReport = capturesReport;
     }
     public String getCertificationFacematchRecord() {

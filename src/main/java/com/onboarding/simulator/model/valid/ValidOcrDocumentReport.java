@@ -1,9 +1,13 @@
-package com.onboarding.simulator.model;
+package com.onboarding.simulator.model.valid;
+
+import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.*;
 
 @Entity
-public class OcrDocumentReport {
+public class ValidOcrDocumentReport {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,10 +22,14 @@ public class OcrDocumentReport {
     private String filiacao2;
     private String orgao_emissor_do_RG;
     private String estado_emissor_do_RG;
-    private String data_de_validade;
-    private String data_de_nascimento;
-    private String data_de_expedicao;
-    private String data_primeira_Habilitacao;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    private LocalDate data_de_validade;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    private LocalDate data_de_nascimento;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    private LocalDate data_de_expedicao;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    private LocalDate data_primeira_Habilitacao;
     private String local_de_emissao_da_CNH;
     private String numero_da_CNH;
     private String categoria_da_CNH;
@@ -104,28 +112,28 @@ public class OcrDocumentReport {
     public void setEstado_emissor_do_RG(String estado_emissor_do_RG) {
         this.estado_emissor_do_RG = estado_emissor_do_RG;
     }
-    public String getData_de_validade() {
+    public LocalDate getData_de_validade() {
         return data_de_validade;
     }
-    public void setData_de_validade(String data_de_validade) {
+    public void setData_de_validade(LocalDate data_de_validade) {
         this.data_de_validade = data_de_validade;
     }
-    public String getData_de_nascimento() {
+    public LocalDate getData_de_nascimento() {
         return data_de_nascimento;
     }
-    public void setData_de_nascimento(String data_de_nascimento) {
+    public void setData_de_nascimento(LocalDate data_de_nascimento) {
         this.data_de_nascimento = data_de_nascimento;
     }
-    public String getData_de_expedicao() {
+    public LocalDate getData_de_expedicao() {
         return data_de_expedicao;
     }
-    public void setData_de_expedicao(String data_de_expedicao) {
+    public void setData_de_expedicao(LocalDate data_de_expedicao) {
         this.data_de_expedicao = data_de_expedicao;
     }
-    public String getData_primeira_Habilitacao() {
+    public LocalDate getData_primeira_Habilitacao() {
         return data_primeira_Habilitacao;
     }
-    public void setData_primeira_Habilitacao(String data_primeira_Habilitacao) {
+    public void setData_primeira_Habilitacao(LocalDate data_primeira_Habilitacao) {
         this.data_primeira_Habilitacao = data_primeira_Habilitacao;
     }
     public String getLocal_de_emissao_da_CNH() {

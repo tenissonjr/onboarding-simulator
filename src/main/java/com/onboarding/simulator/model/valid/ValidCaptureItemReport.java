@@ -1,9 +1,9 @@
-package com.onboarding.simulator.model;
+package com.onboarding.simulator.model.valid;
 
 import jakarta.persistence.*;
 
 @Entity
-public class CaptureItemReport {
+public class ValidCaptureItemReport {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,10 +20,10 @@ public class CaptureItemReport {
     //private Object captureFormItens;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    private LinessesTwoDimensionResult linessesTwoDimensionResult;
+    private ValidLinessesTwoDimensionResult linessesTwoDimensionResult;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    private OcrDocumentReport ocrDocumentReport;
+    private ValidOcrDocumentReport ocrDocumentReport;
     
     
     private String base64;
@@ -69,16 +69,16 @@ public class CaptureItemReport {
     public void setUrl_2(String url_2) {
         this.url_2 = url_2;
     }
-    public LinessesTwoDimensionResult getLinessesTwoDimensionResult() {
+    public ValidLinessesTwoDimensionResult getLinessesTwoDimensionResult() {
         return linessesTwoDimensionResult;
     }
-    public void setLinessesTwoDimensionResult(LinessesTwoDimensionResult linessesTwoDimensionResult) {
+    public void setLinessesTwoDimensionResult(ValidLinessesTwoDimensionResult linessesTwoDimensionResult) {
         this.linessesTwoDimensionResult = linessesTwoDimensionResult;
     }
-    public OcrDocumentReport getOcrDocumentReport() {
+    public ValidOcrDocumentReport getOcrDocumentReport() {
         return ocrDocumentReport;
     }
-    public void setOcrDocumentReport(OcrDocumentReport ocrDocumentReport) {
+    public void setOcrDocumentReport(ValidOcrDocumentReport ocrDocumentReport) {
         this.ocrDocumentReport = ocrDocumentReport;
     }
     public String getBase64() {

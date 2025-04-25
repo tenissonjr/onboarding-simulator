@@ -1,9 +1,9 @@
-package com.onboarding.simulator.model;
+package com.onboarding.simulator.model.valid;
 
 import jakarta.persistence.*;
 
 @Entity
-public class LinessesTwoDimensionResult {
+public class ValidLinessesTwoDimensionResult {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)    

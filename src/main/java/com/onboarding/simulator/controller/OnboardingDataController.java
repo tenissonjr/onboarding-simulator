@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.onboarding.simulator.model.SimulatorConfig;
-import com.onboarding.simulator.model.ValidOnboardingData;
+import com.onboarding.simulator.model.valid.ValidOnboardingData;
 import com.onboarding.simulator.repository.SimulatorConfigRepository;
-import com.onboarding.simulator.repository.ValidOnboardingDataRepository;
+import com.onboarding.simulator.repository.valid.ValidOnboardingDataRepository;
 
 import jakarta.servlet.http.HttpServletResponse;
 

@@ -14,10 +14,10 @@ import com.onboarding.simulator.dto.SimulatorStatisticsDto;
 import com.onboarding.simulator.model.GenerationPattern;
 import com.onboarding.simulator.model.NotificationStatus;
 import com.onboarding.simulator.model.SimulatorConfig;
-import com.onboarding.simulator.model.ValidOnboardingData;
+import com.onboarding.simulator.model.valid.ValidOnboardingData;
 import com.onboarding.simulator.repository.NotificationRecordRepository;
 import com.onboarding.simulator.repository.SimulatorConfigRepository;
-import com.onboarding.simulator.repository.ValidOnboardingDataRepository;
+import com.onboarding.simulator.repository.valid.ValidOnboardingDataRepository;
 
 import jakarta.annotation.PostConstruct;
 
@@ -225,7 +225,6 @@ public class SimulatorService {
                 totalGeneratedCount,
                 notificationRepository.countByStatus(NotificationStatus.SENT),
                 notificationRepository.countByStatus(NotificationStatus.FAILED),
-                validOnboardingDataRepository.count(),
                 config.getCadastrosPerMinute(),
                 config.isSimulationRunning()
         );

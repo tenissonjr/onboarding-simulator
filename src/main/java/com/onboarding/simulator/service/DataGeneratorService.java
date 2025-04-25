@@ -2,28 +2,26 @@ package com.onboarding.simulator.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.stereotype.Service;
 
 import com.github.javafaker.Faker;
-import com.onboarding.simulator.model.CaptureItemReport;
-import com.onboarding.simulator.model.CapturesReport;
-import com.onboarding.simulator.model.LinessesTwoDimensionResult;
-import com.onboarding.simulator.model.OcrDocumentReport;
-import com.onboarding.simulator.model.ValidOnboardingData;
-import com.onboarding.simulator.repository.ValidOnboardingDataRepository;
+import com.onboarding.simulator.model.valid.ValidCaptureItemReport;
+import com.onboarding.simulator.model.valid.ValidCapturesReport;
+import com.onboarding.simulator.model.valid.ValidLinessesTwoDimensionResult;
+import com.onboarding.simulator.model.valid.ValidOcrDocumentReport;
+import com.onboarding.simulator.model.valid.ValidOnboardingData;
+import com.onboarding.simulator.repository.valid.ValidOnboardingDataRepository;
 
 @Service
 
 public class DataGeneratorService {
 
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DataGeneratorService.class);
+
     private final ValidOnboardingDataRepository validOnboardingDataRepository;
 
 
@@ -56,14 +54,14 @@ public class DataGeneratorService {
         data.setChat(new ArrayList<>());
 
         // Create and populate capturesReport
-        List<CapturesReport> capturesReportList = new ArrayList<>();
+        List<ValidCapturesReport> capturesReportList = new ArrayList<>();
 
         // First CapturesReport
-        CapturesReport report1 = new CapturesReport();
+        ValidCapturesReport report1 = new ValidCapturesReport();
         report1.setOid("625be2d0-e465-4200-8e36-097329647357");
         report1.setName("Prova de vida");
 
-        CaptureItemReport itemReport1 = new CaptureItemReport();
+        ValidCaptureItemReport itemReport1 = new ValidCaptureItemReport();
         itemReport1.setOid("a478f091-e58b-4be5-83f8-ca9d803b0a79");
         itemReport1.setTime("04/23/2025 15:48:36");
         itemReport1.setType("Png");
@@ -71,7 +69,7 @@ public class DataGeneratorService {
         itemReport1.setUrl_2(null);
 
 
-        LinessesTwoDimensionResult livenessResult = new LinessesTwoDimensionResult();
+        ValidLinessesTwoDimensionResult livenessResult = new ValidLinessesTwoDimensionResult();
         livenessResult.setSuccess(true);
         livenessResult.setResult("");
         livenessResult.setSpoof(false);
@@ -87,11 +85,11 @@ public class DataGeneratorService {
         capturesReportList.add(report1);
 
         // Second CapturesReport
-        CapturesReport report2 = new CapturesReport();
+        ValidCapturesReport report2 = new ValidCapturesReport();
         report2.setOid("0dcbf49e-3e88-43a7-a759-6abb72bab841");
         report2.setName(" Documento de Identificação");
 
-        CaptureItemReport itemReport2 = new CaptureItemReport();
+        ValidCaptureItemReport itemReport2 = new ValidCaptureItemReport();
         itemReport2.setOid("9257c6c7-979b-49dd-a091-ee7ed0080fa4");
         itemReport2.setTime("04/23/2025 15:48:08");
         itemReport2.setType("Png");
@@ -99,7 +97,7 @@ public class DataGeneratorService {
         itemReport2.setUrl_2("");
         itemReport2.setLinessesTwoDimensionResult(null);
 
-        OcrDocumentReport ocrReport = new OcrDocumentReport();
+        ValidOcrDocumentReport ocrReport = new ValidOcrDocumentReport();
         ocrReport.setFaceUrl(null);
         ocrReport.setDocType("CNH");
         ocrReport.setDocumentName(faker.name().fullName());
@@ -107,26 +105,31 @@ public class DataGeneratorService {
         ocrReport.setCpf(generateCpf());
         ocrReport.setFiliacao1(faker.name().fullName());
         ocrReport.setFiliacao2(faker.name().fullName());
-        ocrReport.setOrgao_emissor_do_RG("SSP");
+        ocrReport.setOrgao_emissor_do_RG(generateOrgaoEmissor());
         ocrReport.setEstado_emissor_do_RG(null);
-        ocrReport.setData_de_validade("27/04/2027");
+        ocrReport.setData_de_validade(LocalDate.now().plusYears(faker.number().numberBetween(1, 10)));
 
 
+        LocalDate dataNascimento = faker.date().birthday().toInstant()
+            .atZone(java.time.ZoneId.systemDefault())
+            .toLocalDate();
 
-        Date dataNascimento= faker.date().birthday() ;
+        
 
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+        ocrReport.setData_de_nascimento(dataNascimento);
 
-        ocrReport.setData_de_nascimento(sdf.format(dataNascimento));
-        ocrReport.setData_de_expedicao("20/06/2022");
-        ocrReport.setData_primeira_Habilitacao("05/03/1988");
-        ocrReport.setLocal_de_emissao_da_CNH("BRASILIA-DISTRITO FEDERAL, DF");
-        ocrReport.setNumero_da_CNH("00156426578");
+        ocrReport.setData_primeira_Habilitacao(dataNascimento.plusYears(18));
+        ocrReport.setData_de_expedicao(dataNascimento.plusYears(20));
+        ocrReport.setLocal_de_emissao_da_CNH(faker.nation().capitalCity() + " " + generateUf());
+
+       
+
+        ocrReport.setNumero_da_CNH(String.valueOf(faker.number().randomNumber(12, true)));
         ocrReport.setCategoria_da_CNH(null);
-        ocrReport.setNumero_do_Renach_na_CNH("DF769658407");
+        ocrReport.setNumero_do_Renach_na_CNH(String.valueOf(faker.number().randomNumber(11, true)));
         ocrReport.setCampo_de_Observacao_na_CNH(null);
         ocrReport.setInformativo_da_observação_da_CNH("Sim");
-        ocrReport.setOrgao_emissor_da_CNH("SECRETARIA NACIONAL DE TRANSITO");
+        ocrReport.setOrgao_emissor_da_CNH(generateOrgaoEmissor());
         ocrReport.setPais(null);
 
         // (remaining fields are omitted for brevity)
@@ -201,13 +204,6 @@ public class DataGeneratorService {
         String[] ufs = {"AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA", "MG", "MS", "MT",
                 "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO"};
         return ufs[new Random().nextInt(ufs.length)];
-    }
-    
-    private LocalDate generateRandomDate(LocalDate startDate, LocalDate endDate) {
-        long startDay = startDate.toEpochDay();
-        long endDay = endDate.toEpochDay();
-        long randomDay = ThreadLocalRandom.current().nextLong(startDay, endDay + 1);
-        return LocalDate.ofEpochDay(randomDay);
     }
     
 

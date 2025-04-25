@@ -2,33 +2,31 @@ package com.onboarding.simulator.dto;
 
 
 public class SimulatorStatisticsDto {
-    private long totalCadastrosGenerated;
-    private long totalNotificationsSent;
+    private long cadastrosGerados;
+    private long notificacoesEncaminhadas;
     private long totalNotificationsFailed;
-    private long cadastros;
-    private long generationRate; // current per minute
-    private boolean simulationRunning;
+    private long taxaPorMinutoGeracaoCadastros; // current per minute
+    private boolean simulacaoEmProcessamento;
     public SimulatorStatisticsDto(long totalGeneratedCount, long countByStatus, long countByStatus2,
-            long countActiveCadastros, int cadastrosPerMinute, boolean simulationRunning2) {
-        this.totalCadastrosGenerated = totalGeneratedCount;
-        this.totalNotificationsSent = countByStatus;
+             int cadastrosPerMinute, boolean simulationRunning2) {
+        this.cadastrosGerados = totalGeneratedCount;
+        this.notificacoesEncaminhadas = countByStatus;
         this.totalNotificationsFailed = countByStatus2;
-        this.cadastros = countActiveCadastros;
-        this.generationRate = cadastrosPerMinute;
-        this.simulationRunning = simulationRunning2;
+        this.taxaPorMinutoGeracaoCadastros = cadastrosPerMinute;
+        this.simulacaoEmProcessamento = simulationRunning2;
 
     }
-    public long getTotalCadastrosGenerated() {
-        return totalCadastrosGenerated;
+    public long getCadastrosGerados() {
+        return cadastrosGerados;
     }
-    public void setTotalCadastrosGenerated(long totalCadastrosGenerated) {
-        this.totalCadastrosGenerated = totalCadastrosGenerated;
+    public void setCadastrosGerados(long totalCadastrosGenerated) {
+        this.cadastrosGerados = totalCadastrosGenerated;
     }
-    public long getTotalNotificationsSent() {
-        return totalNotificationsSent;
+    public long getNotificacoesEncaminhadas() {
+        return notificacoesEncaminhadas;
     }
-    public void setTotalNotificationsSent(long totalNotificationsSent) {
-        this.totalNotificationsSent = totalNotificationsSent;
+    public void setNotificacoesEncaminhadas(long totalNotificationsSent) {
+        this.notificacoesEncaminhadas = totalNotificationsSent;
     }
     public long getTotalNotificationsFailed() {
         return totalNotificationsFailed;
@@ -36,23 +34,18 @@ public class SimulatorStatisticsDto {
     public void setTotalNotificationsFailed(long totalNotificationsFailed) {
         this.totalNotificationsFailed = totalNotificationsFailed;
     }
-    public long getCadastros() {
-        return cadastros;
+
+    public long getTaxaPorMinutoGeracaoCadastros() {
+        return taxaPorMinutoGeracaoCadastros;
     }
-    public void setCadastros(long activeCadastros) {
-        this.cadastros = activeCadastros;
+    public void setTaxaPorMinutoGeracaoCadastros(long generationRate) {
+        this.taxaPorMinutoGeracaoCadastros = generationRate;
     }
-    public long getGenerationRate() {
-        return generationRate;
+    public boolean isSimulacaoEmProcessamento() {
+        return simulacaoEmProcessamento;
     }
-    public void setGenerationRate(long generationRate) {
-        this.generationRate = generationRate;
-    }
-    public boolean isSimulationRunning() {
-        return simulationRunning;
-    }
-    public void setSimulationRunning(boolean simulationRunning) {
-        this.simulationRunning = simulationRunning;
+    public void setSimulacaoEmProcessamento(boolean simulationRunning) {
+        this.simulacaoEmProcessamento = simulationRunning;
     }
 
     
