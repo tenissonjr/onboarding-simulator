@@ -17,7 +17,6 @@ import com.onboarding.simulator.model.SimulatorConfig;
 import com.onboarding.simulator.model.valid.ValidOnboardingData;
 import com.onboarding.simulator.repository.NotificationRecordRepository;
 import com.onboarding.simulator.repository.SimulatorConfigRepository;
-import com.onboarding.simulator.repository.valid.ValidOnboardingDataRepository;
 
 import jakarta.annotation.PostConstruct;
 
@@ -26,19 +25,17 @@ public class SimulatorService {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SimulatorService.class);
 
-    private final ValidOnboardingDataRepository validOnboardingDataRepository;
+
     private final SimulatorConfigRepository configRepository;
     private final NotificationRecordRepository notificationRepository;
     private final DataGeneratorService dataGeneratorService;
     private final NotificationService notificationService;
 
 
-    public SimulatorService(ValidOnboardingDataRepository validOnboardingDataRepository,
-                            SimulatorConfigRepository configRepository,
+    public SimulatorService(SimulatorConfigRepository configRepository,
                             NotificationRecordRepository notificationRepository,
                             DataGeneratorService dataGeneratorService,
                             NotificationService notificationService) {
-        this.validOnboardingDataRepository = validOnboardingDataRepository;
         this.configRepository = configRepository;
         this.notificationRepository = notificationRepository;
         this.dataGeneratorService = dataGeneratorService;
