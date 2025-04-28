@@ -1,5 +1,47 @@
-{"properties": [{
-  "name": "simulator.user.cnh.frente",
-  "type": "java.lang.String",
-  "description": "Imagem Base64 do documento "
-}]}
+{"properties": [
+  {
+    "name": "simulator.user.cnh.frente",
+    "type": "java.lang.String",
+    "description": "A description for 'simulator.user.cnh.frente'"
+  },
+  {
+    "name": "simulator.default.pattern",
+    "type": "java.lang.String",
+    "description": "A description for 'simulator.default.pattern'"
+  },
+  {
+    "name": "simulator.default.notification-endpoint",
+    "type": "java.lang.String",
+    "description": "A description for 'simulator.default.notification-endpoint'"
+  },
+  {
+    "name": "simulator.default.cadastros-per-minute",
+    "type": "java.lang.String",
+    "description": "A description for 'simulator.default.cadastros-per-minute'"
+  },
+  {
+    "name": "simulator.default.generate-errors",
+    "type": "java.lang.String",
+    "description": "A description for 'simulator.default.generate-errors'"
+  },
+  {
+    "name": "simulator.default.error-rate",
+    "type": "java.lang.String",
+    "description": "A description for 'simulator.default.error-rate'"
+  },
+  {
+    "name": "simulator.default.data-ttl-minutes",
+    "type": "java.lang.String",
+    "description": "A description for 'simulator.default.data-ttl-minutes'"
+  },
+  {
+    "name": "simulator.user.avatar",
+    "type": "java.lang.String",
+    "description": "A description for 'simulator.user.avatar'"
+  },
+  {
+    "name": "simulator.default.response-delay-ms",
+    "type": "java.lang.String",
+    "description": "A description for 'simulator.default.response-delay-ms'"
+  }
+]}
