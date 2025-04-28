@@ -1,6 +1,12 @@
 package com.onboarding.simulator.model.valid;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class ValidCaptureItemReport {
@@ -25,11 +31,11 @@ public class ValidCaptureItemReport {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private ValidOcrDocumentReport ocrDocumentReport;
     
-    
+    @Lob
     private String base64;
 
-    
-    private String base64_2;
+    @Lob
+   private String base64_2;
 
 
     public Long getId() {

@@ -1,5 +1,6 @@
 package com.onboarding.simulator.service;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +24,14 @@ public class DataGeneratorService {
 
 
     private final ValidOnboardingDataRepository validOnboardingDataRepository;
+    private final UserAvatarFactory userAvatarFactory;
 
 
     private final Faker faker = new Faker(Locale.forLanguageTag("pt-BR"));
 
-    public DataGeneratorService(ValidOnboardingDataRepository validOnboardingDataRepository) {
+    public DataGeneratorService(ValidOnboardingDataRepository validOnboardingDataRepository, UserAvatarFactory userAvatarFactory) {
         this.validOnboardingDataRepository = validOnboardingDataRepository;
+        this.userAvatarFactory = userAvatarFactory;
     }
 
     public ValidOnboardingData generateValidOnboardingData(){
@@ -68,6 +71,16 @@ public class DataGeneratorService {
         itemReport1.setUrl("https://certfyremote.blob.core.windows.net/199e960e-cdac-462a-b06a-fce9ae09890e/Face-autoid-3830786e-4062-42b7-adf4-112c8a09e3ff-638810201217711971.jpeg");
         itemReport1.setUrl_2(null);
 
+        itemReport1.setOcrDocumentReport(null);
+
+
+
+        try{
+            itemReport1.setBase64(userAvatarFactory.modifyImageWithPastelOverlay());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        itemReport1.setBase64_2(null);
 
         ValidLinessesTwoDimensionResult livenessResult = new ValidLinessesTwoDimensionResult();
         livenessResult.setSuccess(true);
@@ -77,9 +90,6 @@ public class DataGeneratorService {
         livenessResult.setIntegrationType("LivenessPro");
         itemReport1.setLinessesTwoDimensionResult(livenessResult);
 
-        itemReport1.setOcrDocumentReport(null);
-        itemReport1.setBase64(null);
-        itemReport1.setBase64_2(null);
 
         report1.setCaptureItemReport(List.of(itemReport1));
         capturesReportList.add(report1);
@@ -134,7 +144,14 @@ public class DataGeneratorService {
 
         // (remaining fields are omitted for brevity)
         itemReport2.setOcrDocumentReport(ocrReport);
-        itemReport2.setBase64(null);
+
+        try{
+            itemReport2.setBase64(userAvatarFactory.modifyImageWithPastelOverlay());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         itemReport2.setBase64_2(null);
 
         report2.setCaptureItemReport(List.of(itemReport2));
