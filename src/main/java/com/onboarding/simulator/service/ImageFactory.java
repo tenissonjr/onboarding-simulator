@@ -9,21 +9,39 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserAvatarFactory {
+public class ImageFactory {
 
     @Value("${simulator.user.avatar}")
-    private  String originalBase64Image;
+    private  String imagemFotoFace;
 
+    @Value("${simulator.user.cnh.frente}")
+    private  String imagemDocumentoFrente;
 
-    // Método para modificar a imagem e retornar a nova Base64
-    public String modifyImageWithPastelOverlay() throws IOException {
-        // Decodificar a string Base64 para obter a imagem original
-        byte[] imageBytes = Base64.getDecoder().decode(originalBase64Image);
-        BufferedImage inputImage = ImageIO.read(new java.io.ByteArrayInputStream(imageBytes));
+    private static final Logger log = LoggerFactory.getLogger(ImageFactory.class);
+
+    public String gerarImagemFace()  {
+        return gearImagem(this.imagemFotoFace) ;
+    }    
+
+    public String gerarImagemDocumentoFrente()  {
+        return gearImagem(this.imagemDocumentoFrente) ;
+    }    
+
+    private String gearImagem(String imagemBase)  {
+        byte[] imageBytes = Base64.getDecoder().decode(imagemBase);
+        BufferedImage inputImage;
+        try {
+            inputImage = ImageIO.read(new java.io.ByteArrayInputStream(imageBytes));
+        } catch (IOException e) {
+            log.error(imagemBase + " - Erro ao ler a imagem: " + e.getMessage());
+            return null;
+        }
 
         // Gerar uma cor pastel aleatória
         Color pastelColor = generateRandomPastelColor();
@@ -50,7 +68,12 @@ public class UserAvatarFactory {
 
         // Converter a nova imagem para Base64
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        ImageIO.write(outputImage, "png", outputStream);
+        try {
+            ImageIO.write(outputImage, "png", outputStream);
+        } catch (IOException e) {
+            log.error(imagemBase + " - Erro ao escrever a imagem: " + e.getMessage());
+            return null;
+        }
         byte[] modifiedImageBytes = outputStream.toByteArray();
         return Base64.getEncoder().encodeToString(modifiedImageBytes);
     }

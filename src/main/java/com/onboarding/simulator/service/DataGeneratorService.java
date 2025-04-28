@@ -24,14 +24,14 @@ public class DataGeneratorService {
 
 
     private final ValidOnboardingDataRepository validOnboardingDataRepository;
-    private final UserAvatarFactory userAvatarFactory;
+    private final ImageFactory imageFactory;
 
 
     private final Faker faker = new Faker(Locale.forLanguageTag("pt-BR"));
 
-    public DataGeneratorService(ValidOnboardingDataRepository validOnboardingDataRepository, UserAvatarFactory userAvatarFactory) {
+    public DataGeneratorService(ValidOnboardingDataRepository validOnboardingDataRepository, ImageFactory imageFactory) {
         this.validOnboardingDataRepository = validOnboardingDataRepository;
-        this.userAvatarFactory = userAvatarFactory;
+        this.imageFactory = imageFactory;
     }
 
     public ValidOnboardingData generateValidOnboardingData(){
@@ -64,23 +64,16 @@ public class DataGeneratorService {
         report1.setOid("625be2d0-e465-4200-8e36-097329647357");
         report1.setName("Prova de vida");
 
-        ValidCaptureItemReport itemReport1 = new ValidCaptureItemReport();
-        itemReport1.setOid("a478f091-e58b-4be5-83f8-ca9d803b0a79");
-        itemReport1.setTime("04/23/2025 15:48:36");
-        itemReport1.setType("Png");
-        itemReport1.setUrl("https://certfyremote.blob.core.windows.net/199e960e-cdac-462a-b06a-fce9ae09890e/Face-autoid-3830786e-4062-42b7-adf4-112c8a09e3ff-638810201217711971.jpeg");
-        itemReport1.setUrl_2(null);
+        ValidCaptureItemReport itemReportProvaVida = new ValidCaptureItemReport();
+        itemReportProvaVida.setOid("a478f091-e58b-4be5-83f8-ca9d803b0a79");
+        itemReportProvaVida.setTime("04/23/2025 15:48:36");
+        itemReportProvaVida.setType("Png");
+        itemReportProvaVida.setUrl("https://certfyremote.blob.core.windows.net/199e960e-cdac-462a-b06a-fce9ae09890e/Face-autoid-3830786e-4062-42b7-adf4-112c8a09e3ff-638810201217711971.jpeg");
+        itemReportProvaVida.setUrl_2(null);
 
-        itemReport1.setOcrDocumentReport(null);
-
-
-
-        try{
-            itemReport1.setBase64(userAvatarFactory.modifyImageWithPastelOverlay());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        itemReport1.setBase64_2(null);
+        itemReportProvaVida.setOcrDocumentReport(null);
+        itemReportProvaVida.setBase64(imageFactory.gerarImagemFace());
+        itemReportProvaVida.setBase64_2(null);
 
         ValidLinessesTwoDimensionResult livenessResult = new ValidLinessesTwoDimensionResult();
         livenessResult.setSuccess(true);
@@ -88,10 +81,10 @@ public class DataGeneratorService {
         livenessResult.setSpoof(false);
         livenessResult.setScore(100);
         livenessResult.setIntegrationType("LivenessPro");
-        itemReport1.setLinessesTwoDimensionResult(livenessResult);
+        itemReportProvaVida.setLinessesTwoDimensionResult(livenessResult);
 
 
-        report1.setCaptureItemReport(List.of(itemReport1));
+        report1.setCaptureItemReport(List.of(itemReportProvaVida));
         capturesReportList.add(report1);
 
         // Second CapturesReport
@@ -99,13 +92,15 @@ public class DataGeneratorService {
         report2.setOid("0dcbf49e-3e88-43a7-a759-6abb72bab841");
         report2.setName(" Documento de Identificação");
 
-        ValidCaptureItemReport itemReport2 = new ValidCaptureItemReport();
-        itemReport2.setOid("9257c6c7-979b-49dd-a091-ee7ed0080fa4");
-        itemReport2.setTime("04/23/2025 15:48:08");
-        itemReport2.setType("Png");
-        itemReport2.setUrl("https://certfyremote.blob.core.windows.net/199e960e-cdac-462a-b06a-fce9ae09890e/autoid-3830786e-4062-42b7-adf4-112c8a09e3ff-154805.png");
-        itemReport2.setUrl_2("");
-        itemReport2.setLinessesTwoDimensionResult(null);
+        ValidCaptureItemReport itemReportDocumento = new ValidCaptureItemReport();
+        itemReportDocumento.setOid("9257c6c7-979b-49dd-a091-ee7ed0080fa4");
+        itemReportDocumento.setTime("04/23/2025 15:48:08");
+        itemReportDocumento.setType("Png");
+        itemReportDocumento.setUrl("https://certfyremote.blob.core.windows.net/199e960e-cdac-462a-b06a-fce9ae09890e/autoid-3830786e-4062-42b7-adf4-112c8a09e3ff-154805.png");
+        itemReportDocumento.setUrl_2("");
+        itemReportDocumento.setBase64(imageFactory.gerarImagemDocumentoFrente());
+
+        itemReportDocumento.setLinessesTwoDimensionResult(null);
 
         ValidOcrDocumentReport ocrReport = new ValidOcrDocumentReport();
         ocrReport.setFaceUrl(null);
@@ -143,18 +138,11 @@ public class DataGeneratorService {
         ocrReport.setPais(null);
 
         // (remaining fields are omitted for brevity)
-        itemReport2.setOcrDocumentReport(ocrReport);
+        itemReportDocumento.setOcrDocumentReport(ocrReport);
+        itemReportDocumento.setBase64(imageFactory.gerarImagemDocumentoFrente());
+        itemReportDocumento.setBase64_2(null);
 
-        try{
-            itemReport2.setBase64(userAvatarFactory.modifyImageWithPastelOverlay());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        itemReport2.setBase64_2(null);
-
-        report2.setCaptureItemReport(List.of(itemReport2));
+        report2.setCaptureItemReport(List.of(itemReportDocumento));
         capturesReportList.add(report2);
 
         data.setCapturesReport(capturesReportList);
