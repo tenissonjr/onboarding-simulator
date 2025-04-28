@@ -16,6 +16,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ImageFactory {
+    private static final Logger log = LoggerFactory.getLogger(ImageFactory.class);
+
+    private static final String DATA_IMAGE_PREFIX = "data:image/png;base64,";
 
     @Value("${simulator.user.avatar}")
     private  String imagemFotoFace;
@@ -23,14 +26,13 @@ public class ImageFactory {
     @Value("${simulator.user.cnh.frente}")
     private  String imagemDocumentoFrente;
 
-    private static final Logger log = LoggerFactory.getLogger(ImageFactory.class);
 
     public String gerarImagemFace()  {
-        return gearImagem(this.imagemFotoFace) ;
+        return DATA_IMAGE_PREFIX+ gearImagem(this.imagemFotoFace) ;
     }    
 
     public String gerarImagemDocumentoFrente()  {
-        return gearImagem(this.imagemDocumentoFrente) ;
+        return DATA_IMAGE_PREFIX + gearImagem(this.imagemDocumentoFrente) ;
     }    
 
     private String gearImagem(String imagemBase)  {
