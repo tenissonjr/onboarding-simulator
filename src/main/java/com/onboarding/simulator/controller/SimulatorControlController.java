@@ -31,7 +31,7 @@ public class SimulatorControlController {
         return ResponseEntity.ok("Simulation stopped");
     }
     
-    @PostMapping("/generate-single")
+    @PostMapping("/generate-single-data")
     public ResponseEntity<Map<String, String>> generateSingleCadastro() {
         ValidOnboardingData data = simulatorService.generateSingleCadastro();
         return ResponseEntity.ok(Map.of("hash", data.getIdentifier()));

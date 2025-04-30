@@ -13,11 +13,11 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Digital Onboarding Simulation System API")
+                        .title("Simulador API Valid")
                         .version("1.0.0")
-                        .description("API for simulating digital onboarding processes for integration testing")
+                        .description("API para simulação do serviço de onboarding digital integrado ao sistema SIVIS")
                         .contact(new Contact()
-                                .name("Development Team")
-                                .email("dev@example.com")));
+                                .name("Tenisson Chaves Jr.")
+                                .email("tenisson.junior@camara.leg.br")));
     }
 }

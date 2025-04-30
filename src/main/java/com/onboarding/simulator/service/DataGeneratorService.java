@@ -1,11 +1,12 @@
 package com.onboarding.simulator.service;
 
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
-import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -34,23 +35,23 @@ public class DataGeneratorService {
     }
 
     public ValidOnboardingData generateValidOnboardingData(){
-        String hash = generateUniqueHash();
 
         ValidOnboardingData data = new ValidOnboardingData();
-        data.setHash(hash);
         data.setCompanyId("199e960e-cdac-462a-b06a-fce9ae09890e");
         data.setScheduleConfigurationId("657e4a6f-0425-4f8f-a44e-57917cccf2f7");
         data.setName("Cadastro");
-        data.setIdentifier(hash);
         data.setEmployee(null);
         data.setEmailClient("");
         data.setPhoneNumber(null);
         data.setScheduleType("Auto ID");
         data.setScheduleStatus("Completed");
         data.setScheduleTime("2025-04-23T15:47:27.41");
-        data.setDateStarted("2025-04-23T15:47:27.317");
-        data.setDateCompleted("2025-04-23T15:49:35.83");
-        data.setDateDuration("00:02:08");
+        LocalDateTime startTed = LocalDateTime.now();
+        Duration duration = Duration.ofSeconds(2); // 2 minutes and 8 seconds
+        LocalDateTime completed = startTed.plus(duration);
+        data.setDateStarted(startTed);
+        data.setDateCompleted(completed);
+        data.setDateDuration(duration.toString());
         data.setCapturePlatform("Lite");
         data.setExternalInitialize(false);
         data.setChat(new ArrayList<>());
@@ -155,10 +156,6 @@ public class DataGeneratorService {
 
     }
 
-    
-    private String generateUniqueHash() {
-        return UUID.randomUUID().toString().replace("-", "");
-    }
     
     private String generateCpf() {
         int[] cpf = new int[11];

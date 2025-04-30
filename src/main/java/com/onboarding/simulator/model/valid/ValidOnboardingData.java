@@ -1,14 +1,27 @@
 package com.onboarding.simulator.model.valid;
 
-import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 
 @Entity
 public class ValidOnboardingData {
 
 
     @Id
-    private String hash;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String companyId;
     private String scheduleConfigurationId;
@@ -20,8 +33,11 @@ public class ValidOnboardingData {
     private String scheduleType;
     private String scheduleStatus;
     private String scheduleTime;
-    private String dateStarted;
-    private String dateCompleted;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    private LocalDateTime dateStarted;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    private LocalDateTime dateCompleted;
+    
     private String dateDuration;
     private String capturePlatform;
     private boolean externalInitialize;
@@ -37,6 +53,14 @@ public class ValidOnboardingData {
     private String clientGeolocationLongitude;
     private String crSummaryResponse;
     
+  @PrePersist
+    private void generateIdentifier() {
+        if (this.identifier == null || this.identifier.isEmpty()) {
+            this.identifier = UUID.randomUUID().toString();
+        }
+    }
+
+
     public String getCompanyId() {
         return companyId;
     }
@@ -97,16 +121,17 @@ public class ValidOnboardingData {
     public void setScheduleTime(String scheduleTime) {
         this.scheduleTime = scheduleTime;
     }
-    public String getDateStarted() {
+
+    public LocalDateTime getDateStarted() {
         return dateStarted;
     }
-    public void setDateStarted(String dateStarted) {
+    public void setDateStarted(LocalDateTime dateStarted) {
         this.dateStarted = dateStarted;
     }
-    public String getDateCompleted() {
+    public LocalDateTime getDateCompleted() {
         return dateCompleted;
     }
-    public void setDateCompleted(String dateCompleted) {
+    public void setDateCompleted(LocalDateTime dateCompleted) {
         this.dateCompleted = dateCompleted;
     }
     public String getDateDuration() {
@@ -169,12 +194,13 @@ public class ValidOnboardingData {
     public void setCrSummaryResponse(String crSummaryResponse) {
         this.crSummaryResponse = crSummaryResponse;
     }
-    public String getHash() {
-        return hash;
+    public long getId() {
+        return id;
     }
-    public void setHash(String hash) {
-        this.hash = hash;
+    public void setId(long id) {
+        this.id = id;
     }
+
 
     
 }
