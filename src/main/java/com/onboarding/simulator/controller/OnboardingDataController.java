@@ -8,15 +8,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.onboarding.simulator.dto.AuthenticationRequest;
+import com.onboarding.simulator.dto.AuthenticationResponse;
 import com.onboarding.simulator.model.SimulatorConfig;
 import com.onboarding.simulator.model.valid.ValidOnboardingData;
 import com.onboarding.simulator.repository.SimulatorConfigRepository;
 import com.onboarding.simulator.service.valid.ValidOnboardingDataService;
 
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
@@ -32,6 +36,13 @@ public class OnboardingDataController {
             SimulatorConfigRepository configRepository) {
         this.validOnboardingDataService = validOnboardingDataService;
         this.configRepository = configRepository;
+    }
+
+    @PostMapping("/Authentication/Token")
+    public ResponseEntity<AuthenticationResponse> getAuthenticationToken(@RequestBody AuthenticationRequest request) {
+        log.debug("Received request for authentication token");
+        String token = java.util.UUID.randomUUID().toString();
+        return ResponseEntity.ok(new AuthenticationResponse("Câmara dos Deputados", 9000, token));
     }
 
     @GetMapping("/Schedule/{hash}")
